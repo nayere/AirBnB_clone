@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""Module for the entry point of the command interpreter."""
+"""This Module is for the entry point of the command interpreter."""
+"""Author Job Nayere """
 
 import cmd
 from models.base_model import BaseModel
@@ -15,12 +16,21 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
 
     def default(self, line):
-        """Catch commands if nothing else matches then."""
+        """To Catch commands if nothing else matches then."""
         # print("DEF:::", line)
         self._precmd(line)
+ 
+    def do_EOF(self, line):
+        """This Handles End Of File character."""
+        print()
+        return True
+
+    def do_quit(self, line):
+        """Exits the program."""
+        return True
 
     def _precmd(self, line):
-        """Intercepts commands to test for class.syntax()"""
+        """ Intercepts commands to test for class.syntax()"""
         # print("PRECMD:::", line)
         match = re.search(r"^(\w*)\.(\w+)(?:\(([^)]*)\))$", line)
         if not match:
@@ -73,19 +83,8 @@ class HBNBCommand(cmd.Cmd):
                     setattr(storage.all()[key], attribute, value)
                 storage.all()[key].save()
 
-    def do_EOF(self, line):
-        """Handles End Of File character.
-        """
-        print()
-        return True
-
-    def do_quit(self, line):
-        """Exits the program.
-        """
-        return True
-
     def emptyline(self):
-        """Doesn't do anything on ENTER.
+        """Wont do anything on ENTER.
         """
         pass
 
@@ -138,21 +137,6 @@ class HBNBCommand(cmd.Cmd):
                     del storage.all()[key]
                     storage.save()
 
-    def do_all(self, line):
-        """Prints all string representation of all instances.
-        """
-        if line != "":
-            words = line.split(' ')
-            if words[0] not in storage.classes():
-                print("** class doesn't exist **")
-            else:
-                nl = [str(obj) for key, obj in storage.all().items()
-                      if type(obj).__name__ == words[0]]
-                print(nl)
-        else:
-            new_list = [str(obj) for key, obj in storage.all().items()]
-            print(new_list)
-
     def do_count(self, line):
         """Counts the instances of a class.
         """
@@ -166,7 +150,22 @@ class HBNBCommand(cmd.Cmd):
                 k for k in storage.all() if k.startswith(
                     words[0] + '.')]
             print(len(matches))
-
+            
+ def do_all(self, line):
+        """Prints all string representation of all instances.
+        """
+        if line != "":
+            words = line.split(' ')
+            if words[0] not in storage.classes():
+                print("** class doesn't exist **")
+            else:
+                nl = [str(obj) for key, obj in storage.all().items()
+                      if type(obj).__name__ == words[0]]
+                print(nl)
+        else:
+            new_list = [str(obj) for key, obj in storage.all().items()]
+            print(new_list)
+            
     def do_update(self, line):
         """Updates an instance by adding or updating attribute.
         """
